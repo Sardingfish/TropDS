@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="Project website for TropDS: Downscaling to Enhance Tropospheric Delay Grid Precision in Space Geodesy">
+    <meta name="author" content="Jason Ding">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Downscaling, Tropospheric Delay, Artificial Intelligence, Space Geodesy, VMF3">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="./asset/css2" rel="stylesheet">
+    <title>TropAI-SpatioTempInhom</title>
+    <link rel="icon" href="./asset/logo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="./asset/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="./asset/bootstrap.min.css">
+    <link rel="stylesheet" href="./asset/project.css">
+    <link rel="stylesheet" type="text/css" href="./asset/slick.css">
+    <link rel="stylesheet" type="text/css" href="./asset/slick-theme.css">
+
+    <script type="text/javascript">
+        var sc_project=13005954; 
+        var sc_invisible=1; 
+        var sc_security="272ec988"; 
+    </script>
+    <script type="text/javascript" src="./asset/counter.js.下载" async=""></script>
+    <noscript>
+        <div class="statcounter">
+            <a title="Web Analytics" href="https://statcounter.com/" target="_blank">
+                <img class="statcounter" src="https://c.statcounter.com/13005954/0/272ec988/1/" alt="Web Analytics" referrerPolicy="no-referrer-when-downgrade">
+            </a>
+        </div>
+    </noscript>
+
+    <style>
+        /* 原有样式 */
+        #canvas-container {
+            background-color: rgb(178, 178, 178);
+            position: relative;  
+        }
+        #canvas {
+            display: block;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+        }
+        .container{
+            max-width: 1000px;
+        }
+        .arrow {
+            border: solid black;
+            border-width: 0 4px 4px 0;
+            position: absolute;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            -webkit-transform: translate(0, -50%);
+            -ms-transform: translate(0, -50%);
+            transform: translate(0, -50%);
+            cursor: pointer;
+        }
+        .right {
+            transform: rotate(-45deg);
+            -webkit-transform: rotate(-45deg);
+            right: -25px;
+        }
+        .left {
+            transform: rotate(135deg);
+            -webkit-transform: rotate(135deg);
+            left: -25px;
+        }
+        .nav-item img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        .nav-item p {
+            text-align: center;
+            font-family: 'Mulish', sans-serif;
+            font-weight: 500;
+            line-height: 1.5rem;
+            font-size: 1.2rem;
+            color: black;
+        }
+        .interactive-item {
+            align-content: center;
+        }
+        .interactive-item video {
+            max-width: 100%;
+            justify-content: center;
+            align-items: center;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .interactive-item p {
+            text-align: center;
+            font-family: 'Mulish', sans-serif;
+            font-weight: 500;
+            line-height: 1.5rem;
+            font-size: 1.2rem;
+            color: black;
+        }
+        .interactive-container {
+            margin-bottom: 0rem;
+            display: grid !important;
+            grid-template-columns: 100%;
+            grid-template-rows: 1fr;
+            gap: 0% 1%;
+            justify-content: center;
+        }
+        .generated-container {
+            margin-bottom: 1rem;
+            display: grid !important;
+            grid-template-columns: 100%;
+            grid-template-rows: 1fr;
+            gap: 0% 1%;
+            justify-content: center;
+        }
+        .teaser-item {
+            justify-content: center;
+            align-items: center;
+            display: flex;
+        }
+        .two-column-section {
+            display: flex;
+            width: 100%;
+            border-left: 10px;
+            border-right: 10px;
+        }
+        .two-column-section .column {
+            padding: 0px;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .two-column-section .first-column {
+            width: 37%;
+            padding-left: 2%;
+        }
+        .two-column-section .second-column {
+            width: 63%;
+            padding-right: 2%;
+        }
+        .key-feedback {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            display: flex;
+            flex-direction: column;
+            pointer-events: none;  
+        }
+        .key-row {
+            display: flex;
+            gap: 4px;
+        }
+        .key-icon {
+            width: 36px;
+            height: 36px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 4px;
+            text-align: center;
+            line-height: 32px;
+            font-weight: 700;
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            font-family: 'Mulish', sans-serif;
+            font-size: 18px;
+            transition: background 0.1s ease;
+        }
+        .key-icon.active {
+            background: rgba(255, 255, 255, 0.85);
+            color: black;
+        }
+        .key-grid {
+            display: grid;
+            grid-template-columns: repeat(3, auto);
+            grid-template-rows: repeat(2, auto);
+            gap: 4px;
+        }
+        .arrow-feedback {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;  
+            pointer-events: none;
+        }
+        .center-img {
+            margin: 0 auto;
+            display: block;
+        }
+        .image-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .image-item {
+            width: 30%;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .image-item img {
+            display: block;
+            width: 100%;
+            height: 180px;
+            border-radius: 6px;
+            object-fit: cover;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin: 0 auto;
+        }
+        .image-title {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+            display: block;
+        }
+
+        .compare-grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            column-gap: 6px;
+            row-gap: 2px;
+            margin: 10px 0;
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        @media (max-width: 768px) {
+            .compare-grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        .image-container-compare {
+            position: relative;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 600/400;
+            overflow: hidden;
+        }
+        .blur-image {
+            position: absolute;
+            width: 98%;
+            height: 98%;
+            filter: blur(0px);
+            z-index: 1;
+            object-fit: contain;
+            object-position: center;
+        }
+        .sharp-image {
+            position: absolute;
+            width: 98%;
+            height: 98%;
+            z-index: 2;
+            clip-path: inset(0 100% 0 0);
+            object-fit: contain;
+            object-position: center;
+        }
+        .slider {
+            position: absolute;
+            width: 4px;
+            height: 100%;
+            background: white;
+            z-index: 3;
+            left: 0;
+            box-shadow: 0 0 10px rgba(255,255,255,0.8);
+        }
+        @keyframes slide {
+            0%, 100% { left: 0; }
+            50% { left: 100%; }
+        }
+        @keyframes reveal {
+            0%, 100% { clip-path: inset(0 100% 0 0); }
+            50% { clip-path: inset(0 0 0 0); }
+        }
+        .sharp-image {
+            animation: reveal 4s infinite linear;
+        }
+        .slider {
+            animation: slide 4s infinite linear;
+        }
+    </style>
+
+    <style>
+        @keyframes loading {
+            0% {
+                transform: rotate(0)
+            }
+            to {
+                transform: rotate(360deg)
+            }
+        }
+        .ag-textarea .MuiInputBase-input::-webkit-scrollbar {
+            height: 6px;
+            width: 6px
+        }
+        .ag-textarea .MuiInputBase-input::-webkit-scrollbar-track {
+            background: transparent
+        }
+        .ag-textarea .MuiInputBase-input::-webkit-scrollbar-thumb {
+            background: #dfdfdf;
+            border-radius: 4px
+        }
+        .ag-textarea .MuiInputBase-input::-webkit-scrollbar-thumb:hover {
+            background: #d4d4d4
+        }
+    </style>
+
+    <style>
+        .translated-content .ytCoreImageHost {
+            visibility: visible;
+        }
+    </style>
+</head>
+
+<body data-new-gr-c-s-check-loaded="14.1265.0" data-gr-ext-installed="" style="">
+    <section>
+        <div class="container">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-7 col-sm-12 mt-4"></div>
+                </div>
+            </div>
+            <div class="row" id="title">
+                <p class="col text-center text-title">
+                    TropDS: Downscaling to Enhance Tropospheric Delay Grid Precision in Space Geodesy
+                </p>
+            </div>
+
+            <div class="row" id="authors">
+                <div class="col-md-12 text-center mt-2 text-author">
+                    <ul class="list-inline">
+                        <li class="list-inline-item mx-2">
+                            <a href="https://dingjunsheng.top/about/">
+                                <p>Junsheng Ding<sup>1</sup></p>
+                            </a>
+                        </li>
+                        <!-- 
+                        <li class="list-inline-item mx-2">
+                            <a href="https://scholar.google.com/citations?user=yjK9vMoAAAAJ&hl=en">
+                                <p>Wu Chen<sup>1</sup></p>
+                            </a>
+                        </li>
+                        <li class="list-inline-item mx-2">
+                            <a href="http://202.127.29.4/shao_gnss_ac/">
+                                <p>Junping Chen<sup>2,3</sup></p>
+                            </a>
+                        </li>
+                        <li class="list-inline-item mx-2">
+                            <a href="https://scholar.google.com/citations?user=lYJUfgIAAAAJ&hl=en">
+                                <p>Jungang Wang<sup>4,5</sup></p>
+                            </a>
+                        </li>
+                        <li class="list-inline-item mx-2">
+                            <a href="https://yizezhang.github.io/about/">
+                                <p>Yize Zhang<sup>2,3</sup></p>
+                            </a>
+                        </li>
+                        -->
+                    </ul>
+                    <ul class="list-inline">
+                        <li class="list-inline-item mx-4">
+                            <p><sup>1</sup>The Hong Kong Polytechnic University</p>
+                        </li>
+                        <!-- 
+                        <li class="list-inline-item mx-4">
+                            <p><sup>2</sup>SHAO</p>
+                        </li>
+                        <li class="list-inline-item mx-4">
+                            <p><sup>3</sup>UCAS</p>
+                        </li>
+                        <li class="list-inline-item mx-4">
+                            <p><sup>4</sup>GFZ</p>
+                        </li>
+                        <li class="list-inline-item mx-4">
+                            <p><sup>5</sup>TU Berlin</p>
+                        </li>
+                        -->
+                    </ul>
+                </div>
+            </div>
+<!--
+            <div class="row" id="venue">
+                <p class="col text-center text-venue">
+                    <a href="https://www.sciencedirect.com/journal/international-journal-of-applied-earth-observation-and-geoinformation">
+                        Preprint 2025
+                    </a>
+                </p>
+            </div>
+-->
+            <div class="row" id="resources">
+                <div class="col text-center mt-m4">
+                    <ul class="list-inline">
+                        <li class="list-inline-item">
+                            <a href="https://github.com/Sardingfish/TropDS" class="resource-button">
+                                <img src="./asset/github_icon_rev.png" class="button-icon">
+                                Code
+                            </a>
+                        </li>
+                        <!--
+                        <li class="list-inline-item">
+                            <a href="https://doi.org/10.1016/j.jag.2025.104473" class="resource-button">
+                                <img src="./asset/paper_icon_rev.png" class="button-icon">
+                                Paper
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="https://mp.weixin.qq.com/s/o7_W6DtL_BBjgYWGqtCYgQ" class="resource-button">
+                                <img src="./asset/wechat_icon_rev.png" class="button-icon">
+                                WeChat
+                            </a>
+                        </li>
+                        -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col my-3">
+                    <div class="container" style="width: 100%; overflow: hidden;">
+
+                    </div>
+
+                    <!-- 插入test.html的4个对比图 - 2×2网格排列（核心修改） -->
+                    <div class="compare-grid-container">
+                        <!-- 第1个图：zhd 模糊/清晰对比 -->
+                        <div class="image-container-compare">
+                            <img src="./asset/zhd_blur.png" class="blur-image" alt="ZHD 模糊对比图">
+                            <img src="./asset/zhd_clear.png" class="sharp-image" alt="ZHD 清晰对比图">
+                            <div class="slider"></div>
+                        </div>
+                        <!-- 第2个图：RMSE_ZHD 前后对比 -->
+                        <div class="image-container-compare">
+                            <img src="./asset/RMSE_ZHD_before.png" class="blur-image" alt="RMSE ZHD 优化前对比图">
+                            <img src="./asset/RMSE_ZHD_after.png" class="sharp-image" alt="RMSE ZHD 优化后对比图">
+                            <div class="slider"></div>
+                        </div>
+                        <!-- 第3个图：zwd 模糊/清晰对比 -->
+                        <div class="image-container-compare">
+                            <img src="./asset/zwd_blur.png" class="blur-image" alt="ZWD 模糊对比图">
+                            <img src="./asset/zwd_clear.png" class="sharp-image" alt="ZWD 清晰对比图">
+                            <div class="slider"></div>
+                        </div>
+                        <!-- 第4个图：RMSE_ZWD 前后对比 -->
+                        <div class="image-container-compare">
+                            <img src="./asset/RMSE_ZWD_before.png" class="blur-image" alt="RMSE ZWD 优化前对比图">
+                            <img src="./asset/RMSE_ZWD_after.png" class="sharp-image" alt="RMSE ZWD 优化后对比图">
+                            <div class="slider"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="row" id="abstract">
+                <div class="col my-3">
+                    <p class="text-header">
+                        Abstract
+                    </p>
+                    <p class="body-text">
+                        Numerical Weather Models (NWMs) via ray-tracing represent one of the most precise methods for deriving tropospheric delays in high-precision space geodetic applications. 
+                        However, considerable computational demands, particularly those associated with input/output operations, interpolation procedures, and data transmission, 
+                        constrain contemporary global tropospheric delay grid products to coarse spatial resolutions, thereby introducing centimeter to decimeter level biases in geodetic processing. 
+                        This study introduces TropDS, a novel downscaling framework for tropospheric delays that integrates physical residual modeling with a U-Net artificial intelligence (AI) refinement. 
+                        By independently characterizing the spatiotemporal deterministic and stochastic components, TropDS produces high-precision, high-resolution products from low-resolution global tropospheric delay fields. 
+                        The model was trained and validated on the TUW VMF3_OP global grid spanning 2020 to 2024 and subsequently tested on 2025 data. 
+                        Evaluation results demonstrate that TropDS enhances global zenith hydrostatic delay (ZHD) and zenith wet delay (ZWD) accuracies to 90.97% and 85.76%, respectively, 
+                        with global root mean square error (RMSE) reduced to less than 2 mm. Inference for a single epoch data requires only ~0.04 seconds. Additional validation on 2025 
+                        VMF3_FC-based products confirms the model's efficacy for forecasted tropospheric delay. Experiments further examine the application of TropDS to tropospheric delay 
+                        forecasts using AI weather forecast foundation model frameworks, specifically Pangu-Weather, GraphCast, and FengWu, revealing substantial improvements in early-stage 
+                        forecast accuracy. This research establishes a robust methodology for generating high-resolution tropospheric products, with significant implications for geodetic investigations 
+                        requiring precise atmospheric corrections. 
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="row" id="approach">
+                <div class="col my-3">
+                    <p class="text-header">
+                        Related Projects
+                    </p>
+                    <div class="image-container">
+                        <div class="image-item">
+                            <a href="http://dingjunsheng.top/TropAI/">
+                                <img src="https://raw.githubusercontent.com/Sardingfish/Sardingfish.github.io/master/image/AboutMe/FMTrop.png">
+                            </a>
+                            <a href="http://dingjunsheng.top/TropAI/">
+                                <p class="image-title">AI Trop Forecasting</p>
+                            </a>
+                        </div>
+                        <div class="image-item">
+                            <a href="http://dingjunsheng.top/TropAI/rtGNSSPWV/">
+                                <img src="https://raw.githubusercontent.com/Sardingfish/Sardingfish.github.io/master/image/AboutMe/GNSSPWVFM.png">
+                            </a>
+                            <a href="http://dingjunsheng.top/TropAI/rtGNSSPWV/">
+                                <p class="image-title">Real-time GNSS PWV</p>
+                            </a>
+                        </div>
+                        <div class="image-item">
+                            <a href="http://dingjunsheng.top/TropAI/rtPWV/">
+                                <img src="https://raw.githubusercontent.com/Sardingfish/Sardingfish.github.io/master/image/AboutMe/FMPWV.png">
+                            </a>
+                            <a href="http://dingjunsheng.top/TropAI/rtPWV/">
+                                <p class="image-title">Real-time PWV</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="row" id="approach">
+                <div class="col my-3">
+                    <p class="text-header">
+                        Related Links
+                    </p>
+                    <p class="body-text" style="margin-top: 1rem;">
+                        <ul>
+                            <li>
+                                Pangu-Weather <a href="https://github.com/198808xc/Pangu-Weather">
+                                    Accurate medium-range global weather forecasting with 3D neural networks
+                                </a>
+                            </li>
+                            <li>
+                                GraphCast <a href="https://github.com/google-deepmind/graphcast">
+                                    Learning skillful medium-range global weather forecasting
+                                </a>
+                            </li>
+                            <li>
+                                FengWu <a href="https://github.com/OpenEarthLab/FengWu">
+                                    The operational medium-range deterministic weather forecasting can be extended beyond a 10-day lead time
+                                </a>
+                            </li>
+                            <li>
+                                ai-models <a href="https://github.com/ecmwf-lab/ai-models">
+                                    Command line program used to run AI-based weather forecasting models
+                                </a>
+                            </li>
+                            <li>
+                                RADIATE <a href="https://github.com/TUW-VieVS/RADIATE">
+                                    Open source ray-tracing software developted by TUM
+                                </a>
+                            </li>
+                        </ul>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="row" id="citation">
+                <div class="col my-3">
+                    <p class="text-header">
+                        BibTeX
+                    </p>
+                    <div class="citation-block">
+                        <div id="citation-text" class="citation-content">
+@article{ding2025spatiotemporal,
+  title={TropDS: Downscaling to Enhance Tropospheric Delay Grid Precision in Space Geodesy},
+  author={Ding, Junsheng and Chen, Wu and Chen, Junping and Wang, Jungang and Zhang, Yize and Bai},
+  journal={Preprint},
+  year={2026},
+}
+                        </div>
+                        <button onclick="copyToClipboard()" class="button active mt-2">Copy</button>
+                    </div>
+                </div>
+            </div>
+            <p style="text-align: center;">Total Visits: <span id="busuanzi_value_page_pv"></span></p>
+        </div>
+    </section>
+
+    <!-- test.html的交互逻辑JS -->
+    <script>
+        function resetAnimation() {
+            const sharpImgs = document.querySelectorAll('.sharp-image');
+            const sliders = document.querySelectorAll('.slider');
+            
+            sharpImgs.forEach(sharpImg => {
+                sharpImg.style.animation = 'none';
+                void sharpImg.offsetWidth;
+                sharpImg.style.animation = 'reveal 4s linear forwards';
+            });
+
+            sliders.forEach(slider => {
+                slider.style.animation = 'none';
+                void slider.offsetWidth;
+                slider.style.animation = 'slide 4s linear forwards';
+            });
+        }
+        setInterval(resetAnimation, 4000);
+    </script>
+
+    <!-- 原有JS -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.slider-for-interactive').on('beforeChange', function (event, slick, currentSlide, nextSlide) {
+                var video = $(slick.$slides[nextSlide]).find('video');
+                var videoSource = video.find('source[data-lazy]');
+                if (videoSource.length) {
+                    videoSource.attr('src', videoSource.data('lazy'));
+                    videoSource.removeAttr('data-lazy');
+                    video.get(0).load();
+                }
+            });
+            $('.slider-nav-interactive').slick({
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                asNavFor: '.slider-for-interactive',
+                dots: true,
+                centerMode: true,
+                centerPadding: '10%',
+                focusOnSelect: true,
+                nextArrow: '<div class="arrow right"></div>',
+                prevArrow: '<div class="arrow left"></div>',
+            });
+            $('.slider-for-interactive').slick({
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                arrows: false,
+                asNavFor: '.slider-nav-interactive',
+                autoplay: true,
+                speed: 300,
+                autoplaySpeed: 100000,
+                lazyLoad: 'ondemand'
+            });
+
+            $('.slider-for-complete').on('init', function(event, slick){
+                var firstVideo = $(slick.$slides[0]).find('video');
+                var firstVideoSource = firstVideo.find('source');
+                if (firstVideoSource.attr('data-lazy')) {
+                    firstVideoSource.attr('src', firstVideoSource.attr('data-lazy'));
+                    firstVideoSource.removeAttr('data-lazy');
+                    firstVideo[0].load();
+                    firstVideo[0].play();
+                }
+            });
+
+            $('.slider-for-complete').on('beforeChange', function (event, slick, currentSlide, nextSlide) {
+                var nextSlideElem = $(slick.$slides[nextSlide]);
+                var video = nextSlideElem.find('video');
+                var source = video.find('source');
+                
+                if (source.attr('data-lazy')) {
+                    source.attr('src', source.attr('data-lazy'));
+                    source.removeAttr('data-lazy');
+                    video[0].load();
+                }
+            });
+
+            $('.slider-for-complete').on('afterChange', function(event, slick, currentSlide) {
+                var currentSlideElem = $(slick.$slides[currentSlide]);
+                var video = currentSlideElem.find('video');
+                if (video.length) {
+                    video[0].play();
+                }
+            });
+
+            $('.slider-nav-complete').slick({
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                asNavFor: '.slider-for-complete',
+                dots: true,
+                centerMode: true,
+                centerPadding: '10%',
+                focusOnSelect: true,
+                nextArrow: '<div class="arrow right"></div>',
+                prevArrow: '<div class="arrow left"></div>',
+            });
+
+            $('.slider-for-complete').slick({
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                arrows: false,
+                asNavFor: '.slider-nav-complete',
+                autoplay: true,
+                speed: 300,
+                autoplaySpeed: 100000,
+                lazyLoad: 'ondemand'
+            });
+        });
+    </script>
+
+    <script src="./asset/canvas.js.下载"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const videos = document.querySelectorAll('video[muted][loop]');
+            const options = {
+                root: null, 
+                threshold: 0.5 
+            };
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.play();
+                    } else {
+                        entry.target.pause();
+                        entry.target.currentTime = 0; 
+                    }
+                });
+            }, options);
+            videos.forEach(video => {
+                observer.observe(video);
+            });
+        });
+
+        function copyToClipboard() {
+            var copyText = document.getElementById("citation-text");
+            navigator.clipboard.writeText(copyText.textContent).then(function() {
+                alert("Citation copied to clipboard!");
+            }, function(err) {
+                console.error('Could not copy text: ', err);
+            });
+        }
+    </script>
+
+    <script async="" id="netlify-rum-container" src="./asset/rum" data-netlify-rum-site-id="e9069882-4c02-4cb0-b126-f9e5bc97532f" data-netlify-deploy-branch="master" data-netlify-deploy-context="production" data-netlify-cwv-token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaXRlX2lkIjoiZTkwNjk4ODItNGMwMi00Y2IwLWIxMjYtZjllNWJjOTc1MzJmIiwiYWNjb3VudF9pZCI6IjVjMzQxNWY0ZTZjN2FjMWZkMzM0MmY0MSIsImRlcGxveV9pZCI6IjY5MDg4NTM5MWQ5M2JhMDAwOGIxNTY4NiIsImlzc3VlciI6Im5mc2VydmVyIn0.5-hcP3WXaOTQxFFlpGuWZacLbcuV4BymPFtPEEvapLY"></script>
+
+    <div class="host-lopnbnfpjmgpbppclhclehhgafnifija" style="position: relative; z-index: 2147483647;">
+        <template shadowrootmode="open">
+            <style data-emotion="csslopnbnfpjmgpbppclhclehhgafnifija" data-s=""></style>
+            <div>
+                <div role="tooltip" class="MuiPopper-root select-popper-root host-lopnbnfpjmgpbppclhclehhgafnifija host-lopnbnfpjmgpbppclhclehhgafnifija-popper csslopnbnfpjmgpbppclhclehhgafnifija-1onddd3" style="position: fixed; top: 0px; left: 0px; display: none;">
+                    <div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 csslopnbnfpjmgpbppclhclehhgafnifija-trkxrt" style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);">
+                        <div class="MuiBox-root csslopnbnfpjmgpbppclhclehhgafnifija-0">
+                            <div class="MuiBox-root csslopnbnfpjmgpbppclhclehhgafnifija-644370">
+                                <button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall csslopnbnfpjmgpbppclhclehhgafnifija-xz9haa" tabindex="0" type="button">
+                                    <img src="chrome-extension://lopnbnfpjmgpbppclhclehhgafnifija/img/icon-38.png" style="width: 22px; height: 22px; border-radius: 4px;">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <style data-emotion="csslopnbnfpjmgpbppclhclehhgafnifija-global" data-s=""></style>
+            <style data-emotion="csslopnbnfpjmgpbppclhclehhgafnifija-global" data-s=""></style>
+        </template>
+    </div>
+
+    <grammarly-desktop-integration data-grammarly-shadow-root="true">
+        <template shadowrootmode="open">
+            <style>
+                div.grammarly-desktop-integration {
+                    position: absolute;
+                    width: 1px;
+                    height: 1px;
+                    padding: 0;
+                    margin: -1px;
+                    overflow: hidden;
+                    clip: rect(0, 0, 0, 0);
+                    white-space: nowrap;
+                    border: 0;
+                    -moz-user-select: none;
+                    -webkit-user-select: none;
+                    -ms-user-select:none;
+                    user-select:none;
+                }
+                div.grammarly-desktop-integration:before {
+                    content: attr(data-content);
+                }
+            </style>
+            <div aria-label="grammarly-integration" role="group" tabindex="-1" class="grammarly-desktop-integration" data-content="{&quot;mode&quot;:&quot;full&quot;,&quot;isActive&quot;:true,&quot;isUserDisabled&quot;:false}"></div>
+        </template>
+    </grammarly-desktop-integration>
+</body>
+</html>
