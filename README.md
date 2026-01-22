@@ -7,7 +7,7 @@ TropDS: Downscaling to Enhance Tropospheric Delay Grid Precision in Space Geodes
 This project implements a deep learning-based grid-wise tropospheric delay data downscaling framework for high-precision space geodetic data processing. The model uses a U-Net architecture with physical constraints to restore blurred (low-resolution) tropospheric delay images to their clear (high-resolution) versions.
 
 
-| <img src="./web/asset/zhd.gif"  width=224 alt="ZHD"> | <img src="./web/asset/zwd.gif" width=224 alt="ZWD"> | <img src="./web/asset/rmse_zhd.gif" width=224 alt="RMSE ZHD"> |<img src="./web/asset/rmse_zwd.gif" width=224 alt="RMSE ZWD"> |
+| <img src="./web/asset/zhd.gif"  width=360 alt="ZHD"> | <img src="./web/asset/zwd.gif" width=360 alt="ZWD"> | <img src="./web/asset/rmse_zhd.gif" width=360 alt="RMSE ZHD"> |<img src="./web/asset/rmse_zwd.gif" width=360 alt="RMSE ZWD"> |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |:----------------------------------------------------------: |
 |           ZHD                          |                      ZWD                                | RMSE ZHD        |RMSE ZWD
 
