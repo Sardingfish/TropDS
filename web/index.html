@@ -33,7 +33,7 @@
     </noscript>
 
     <style>
-        /* 原有样式 */
+
         #canvas-container {
             background-color: rgb(178, 178, 178);
             position: relative;  
@@ -427,30 +427,25 @@
 
                     </div>
 
-                    <!-- 插入test.html的4个对比图 - 2×2网格排列（核心修改） -->
                     <div class="compare-grid-container">
-                        <!-- 第1个图：zhd 模糊/清晰对比 -->
                         <div class="image-container-compare">
-                            <img src="./asset/zhd_blur.png" class="blur-image" alt="ZHD 模糊对比图">
-                            <img src="./asset/zhd_clear.png" class="sharp-image" alt="ZHD 清晰对比图">
+                            <img src="./asset/zhd_blur.png" class="blur-image" alt="ZHD blur">
+                            <img src="./asset/zhd_clear.png" class="sharp-image" alt="ZHD clear">
                             <div class="slider"></div>
                         </div>
-                        <!-- 第2个图：RMSE_ZHD 前后对比 -->
                         <div class="image-container-compare">
-                            <img src="./asset/RMSE_ZHD_before.png" class="blur-image" alt="RMSE ZHD 优化前对比图">
-                            <img src="./asset/RMSE_ZHD_after.png" class="sharp-image" alt="RMSE ZHD 优化后对比图">
+                            <img src="./asset/RMSE_ZHD_before.png" class="blur-image" alt="RMSE ZHD before">
+                            <img src="./asset/RMSE_ZHD_after.png" class="sharp-image" alt="RMSE ZHD after">
                             <div class="slider"></div>
                         </div>
-                        <!-- 第3个图：zwd 模糊/清晰对比 -->
                         <div class="image-container-compare">
-                            <img src="./asset/zwd_blur.png" class="blur-image" alt="ZWD 模糊对比图">
-                            <img src="./asset/zwd_clear.png" class="sharp-image" alt="ZWD 清晰对比图">
+                            <img src="./asset/zwd_blur.png" class="blur-image" alt="ZWD blur">
+                            <img src="./asset/zwd_clear.png" class="sharp-image" alt="ZWD clear">
                             <div class="slider"></div>
                         </div>
-                        <!-- 第4个图：RMSE_ZWD 前后对比 -->
                         <div class="image-container-compare">
-                            <img src="./asset/RMSE_ZWD_before.png" class="blur-image" alt="RMSE ZWD 优化前对比图">
-                            <img src="./asset/RMSE_ZWD_after.png" class="sharp-image" alt="RMSE ZWD 优化后对比图">
+                            <img src="./asset/RMSE_ZWD_before.png" class="blur-image" alt="RMSE ZWD before">
+                            <img src="./asset/RMSE_ZWD_after.png" class="sharp-image" alt="RMSE ZWD after">
                             <div class="slider"></div>
                         </div>
                     </div>
@@ -577,7 +572,6 @@
         </div>
     </section>
 
-    <!-- test.html的交互逻辑JS -->
     <script>
         function resetAnimation() {
             const sharpImgs = document.querySelectorAll('.sharp-image');
@@ -598,7 +592,6 @@
         setInterval(resetAnimation, 4000);
     </script>
 
-    <!-- 原有JS -->
     <script type="text/javascript">
         $(document).ready(function () {
             $('.slider-for-interactive').on('beforeChange', function (event, slick, currentSlide, nextSlide) {
