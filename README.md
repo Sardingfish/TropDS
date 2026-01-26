@@ -183,10 +183,9 @@ If you use this code in your research, please cite:
 ```bibtex
 @article{ding2026TropDS,
   title = {TropDS: Downscaling to Enhance Tropospheric Delay Grid Precision in Space Geodesy},
-  author = {Junsheng Ding et al.},
+  author = {Ding et al.},
   journal={******},
   year={2026},
-  publisher={****}
 }
 ```
 
