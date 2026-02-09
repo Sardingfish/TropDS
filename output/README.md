@@ -1,1 +1,1 @@
-Please download the pre-trained models (~143 MB) from Gooogle Drive: https://drive.google.com/file/d/1_kdhJ5BMXRtx09vCH-zSEvuekKTA1dYc/view?usp=sharing
+Please download the pre-trained models (~143 MB) from Gooogle Drive: https://drive.google.com/file/d/1_kdhJ5BMXRtx09vCH-zSEvuekKTA1dYc/view?usp=sharing, unzip using ID.
