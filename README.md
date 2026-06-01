@@ -11,6 +11,10 @@ This project implements a deep learning-based grid-wise tropospheric delay data 
 | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |:----------------------------------------------------------: |
 |           ZHD                          |                      ZWD                                | RMSE ZHD        |RMSE ZWD
 
+### News
+
+- [1 June, 2026] TropDS was accepted by Journal of Geodesy!
+
 ### Key Features
 
 - **U-Net Architecture**: Encoder-decoder structure with skip connections for accurate image restoration
@@ -184,7 +188,7 @@ If you use this code in your research, please cite:
 @article{ding2026TropDS,
   title = {TropDS: Downscaling to Enhance Tropospheric Delay Grid Precision in Space Geodesy},
   author = {Ding et al.},
-  journal={******},
+  journal={Journal of Geodesy},
   year={2026},
 }
 ```
