@@ -13,7 +13,7 @@ This project implements a deep learning-based grid-wise tropospheric delay data 
 
 ### News
 
-- [1 June, 2026] TropDS was accepted by Journal of Geodesy! :tada::tada::tada:
+- [1 June, 2026] TropDS was accepted by Journal of Geodesy! 🎉🎉🎉
 
 ### Key Features
 
